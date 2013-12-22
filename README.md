@@ -8,7 +8,7 @@ Script which shows stats from middlecoin.com
 
 Both scripts are standalone, you don't have to download both
 
-Donations
+BTC Donations
 ==========
 * michwill (mdc): 15r271ADbvPkCcENraokEzrRgLrmaSpfc8
 * mardilv (mdc2): 1PkCFatY7jgxY8BFaZe1YeL1baa8G7tVuR
