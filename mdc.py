@@ -1,9 +1,11 @@
 #!/usr/bin/python2
 
-import urllib2, json
+import urllib2, json, sys
 
 # You can donate some mBTC here ;-)
 wallet = u"15r271ADbvPkCcENraokEzrRgLrmaSpfc8"
+if len(sys.argv) > 1:
+	wallet = sys.argv[1]
 
 response = urllib2.urlopen("http://middlecoin2.s3-website-us-west-2.amazonaws.com/json")
 data = json.loads(response.read())

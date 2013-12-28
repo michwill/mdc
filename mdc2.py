@@ -1,6 +1,6 @@
 #!/usr/bin/python2
 # -*- coding: cp1250 -*-
-import urllib2, json, datetime, os, time
+import urllib2, json, datetime, os, sys, time
 from fractions import gcd
 ######################################################
 #You can donate some mBTC here ;-)
@@ -13,6 +13,8 @@ from fractions import gcd
 ######################>CONFIG<#######################
 #insert your adress here, between quotation marks
 wallet = u"1PkCFatY7jgxY8BFaZe1YeL1baa8G7tVuR"
+if len(sys.argv) > 1:
+	wallet = sys.argv[1]
 #set in minutes but accepts fractions, in reality intervals will be slightly longer
 #as getting and processing data from api's takes some time
 #default values: 15 and 5
