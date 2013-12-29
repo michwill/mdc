@@ -17,8 +17,8 @@ if len(sys.argv) > 1:
 	wallet = sys.argv[1]
 #set in minutes but accepts fractions, in reality intervals will be slightly longer
 #as getting and processing data from api's takes some time
-#default values: 15 and 5
-mdc_checktime_interval = float(15)
+#default values: 5 and 5
+mdc_checktime_interval = float(5)
 ex_checktime_interval = float(5)
 #displaying funds in microBTC ( 1 microBTC = 0.000001 BTC )
 #accepted values: True, False
@@ -73,6 +73,12 @@ runningFlag = True
 mdc_checktime_counter = float(0)
 ex_checktime_counter = float(0)
 
+# stash update values, lets webservers send us 304 if the data
+#  is not updated. Reduces server load and lets us query more often 
+#  for updates without download penalty  
+mdc_etag = None
+mdc_last_modified = None
+
 sleeptime = gcd(mdc_checktime_interval, ex_checktime_interval)
 
 while runningFlag:
@@ -85,10 +91,28 @@ while runningFlag:
     print "Exchanges info update in : %.2f seconds" %(ex_checktime_counter*60)
     
     if mdc_checktime_counter <= 0:    
-        response = urllib2.urlopen(mdc_json)
-        data = json.loads(response.read())
-        response.close()
-        mdc_checktime_counter = mdc_checktime_interval
+        request = urllib2.Request(mdc_json)
+
+        # lets save the whales and such, let smart webservers send us
+        # 304 if the data hasn't changed yet
+        if mdc_etag:
+            request.add_header('If-None-Match', mdc_etag)
+        if mdc_last_modified:
+            request.add_header('If-Modified-Since', mdc_last_modified)
+        try:
+            response = urllib2.urlopen(request)
+            # It is ok for servers to ignore/not respond with these
+            mdc_etag = response.headers.get('ETag', None)
+            mdc_last_modified = response.headers.get('Last-Modified', None)
+            data = json.loads(response.read())
+            last_update = data['time']
+            response.close()
+            mdc_checktime_counter = mdc_checktime_interval
+        except urllib2.HTTPError, e:
+            if e.code == 304:
+                last_update = "%s (cached)" %(data['time'],)
+            # just ignore for now, previous version would just crash
+            pass
 
     if ex_checktime_counter <= 0:
         if btce:
@@ -172,7 +196,7 @@ while runningFlag:
         
     print "Middlecoin info"
     print "Wallet : %s" % wallet
-    print "Date:", data["time"]
+    print "Data Updated:", last_update
 
     for i in data["report"]:
         if i[0] == wallet:
@@ -185,7 +209,7 @@ while runningFlag:
         my[k] = float(my[k])
           
     print "    Rejected:\t%.1f%%" % (my.get("rejectedMegahashesPerSecond", 0) / my["megahashesPerSecond"]* 100)
-    write("Total paid", my.get("paidOut", 0),mbtc)
+    write("Total paid   ", my.get("paidOut", 0),mbtc)
     write("Total unpaid ", my.get("immatureBalance", 0) + my.get("unexchangedBalance", 0) + my.get("bitcoinBalance", 0), mbtc)
     write("Exchanged    ", my.get("bitcoinBalance", 0),mbtc)
     write("Unexchanged  ", my.get("unexchangedBalance", 0),mbtc)
