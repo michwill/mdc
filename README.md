@@ -8,9 +8,9 @@ Script which shows stats from middlecoin.com
 
 Both scripts are standalone, you don't have to download both
 
-Run the scripts with your bitcoin address as argument:
+Run the scripts with your bitcoin address and currency as arguments:
 
-	python mdc.py 15r271ADbvPkCcENraokEzrRgLrmaSpfc8
+	python mdc.py 15r271ADbvPkCcENraokEzrRgLrmaSpfc8 EUR
 
 BTC Donations
 ==========
