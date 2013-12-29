@@ -17,3 +17,4 @@ BTC Donations
 * michwill (mdc): 15r271ADbvPkCcENraokEzrRgLrmaSpfc8
 * mardilv (mdc2): 1PkCFatY7jgxY8BFaZe1YeL1baa8G7tVuR
 * ge0rg (commandline): 1georgRntfYmhRPe7xVhJvaUohm1tnBbF
+* nichenke (http cache): 1LZ2MdJ6xcGNCaDCj5XtX7VfAXmWzAxs67
