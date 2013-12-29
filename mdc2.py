@@ -33,6 +33,8 @@ euro = True
 #set currency to use in estimation
 #accepted values: USD, EUR
 exchange_currency = "USD"
+if len(sys.argv) > 2:
+	exchange_currency = sys.argv[2]
 #exchange rate source for calculcating balances in USD
 #accepted values: mtg_avg, mtg_last, btce_avg, btce_last, bit_avg, bit_last
 #to use exchange rates from site for calculating you have to enable it above
