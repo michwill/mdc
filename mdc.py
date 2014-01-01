@@ -37,6 +37,7 @@ def write(greeting, value):
     print "    %s:\t%.2f mBTC = %.2f %s" % (greeting, value, c*value, exchange_currency)
 
 print "    Rejected:\t%.1f%%" % (my.get("rejectedMegahashesPerSecond", 0) / my["megahashesPerSecond"] * 100)
-write("Total paid", my["paidOut"])
+if "paidOut" in my:
+    write("Total paid", my["paidOut"])
 write("Exchanged", my["bitcoinBalance"])
 write("To be paid", my["immatureBalance"] + my["unexchangedBalance"] + my["bitcoinBalance"])
