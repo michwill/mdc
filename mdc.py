@@ -2,6 +2,7 @@
 
 import urllib2, json, sys
 from collections import defaultdict
+from datetime import datetime
 
 # You can donate some mBTC here ;-)
 wallet = u"15r271ADbvPkCcENraokEzrRgLrmaSpfc8"
@@ -22,7 +23,12 @@ response.close()
 c = float(ticker["return"]["avg"]["value"])/1e3
 
 print "Middlecoin info"
-print "Date:", data["time"]
+try:
+    dt = datetime.utcnow() - datetime.strptime(data["time"], "%Y-%m-%d %H:%M:%S")
+except:
+    dt = None
+if dt:
+    print "Last update: %.1f minutes ago (%s UTC)" % (abs(dt.total_seconds()/60.), data["time"])
 
 for i in data["report"]:
     if i[0] == wallet:
