@@ -1,6 +1,7 @@
 #!/usr/bin/python2
 
 import urllib2, json, sys
+from collections import defaultdict
 
 # You can donate some mBTC here ;-)
 wallet = u"15r271ADbvPkCcENraokEzrRgLrmaSpfc8"
@@ -27,17 +28,21 @@ for i in data["report"]:
     if i[0] == wallet:
         break
 
-print "    Hashrate:\t%s MH/s" % i[1]["megahashesPerSecond"]
+print "    Hashrate:\t%s MH/s" % i[1].get("megahashesPerSecond", 0)
 
-my = i[1]
+my = defaultdict(float)
+my.update(i[1])
 for k in my.keys():
-    my[k] = float(my[k]) * 1000
+    try:
+        my[k] = float(my[k]) * 1000
+    except:
+        my[k] = 0
 
 def write(greeting, value):
     print "    %s:\t%.2f mBTC = %.2f %s" % (greeting, value, c*value, exchange_currency)
 
-print "    Rejected:\t%.1f%%" % (my.get("rejectedMegahashesPerSecond", 0) / my["megahashesPerSecond"] * 100)
-if "paidOut" in my:
-    write("Total paid", my["paidOut"])
+if my["megahashesPerSecond"] > 0:
+    print "    Rejected:\t%.1f%%" % (my["rejectedMegahashesPerSecond"] / my["megahashesPerSecond"] * 100)
+write("Total paid", my["paidOut"])
 write("Exchanged", my["bitcoinBalance"])
 write("To be paid", my["immatureBalance"] + my["unexchangedBalance"] + my["bitcoinBalance"])
