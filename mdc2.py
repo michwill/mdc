@@ -1,5 +1,5 @@
 #!/usr/bin/python2
-# -*- coding: cp1250 -*-
+# -*- coding: utf-8 -*-
 import urllib2, json, datetime, os, sys, time
 from fractions import gcd
 ######################################################
@@ -133,7 +133,7 @@ while runningFlag:
                 e_btce_avg = float(btcticker["ticker"]["avg"])
                 e_btce_last = float(btcticker["ticker"]["last"])
                 e_btce_timestamp = int(btcticker["ticker"]["updated"])
-                e_btcetime = datetime.datetime.fromtimestamp( btce_timestamp )
+                e_btcetime = datetime.datetime.fromtimestamp( e_btce_timestamp )
         
         response = urllib2.urlopen("http://data.mtgox.com/api/1/BTCUSD/ticker")
         ticker = json.loads(response.read())
@@ -227,8 +227,8 @@ while runningFlag:
             print "    Last\t :\t$%f" % (mtg_last)
         if euro:
             print "Date:", e_mtgtime.strftime("%Y-%m-%d %H:%M:%S")
-            print "    Average\t :\t€%f" % (e_mtg_avg)
-            print "    Last\t :\t€%f" % (e_mtg_last)        
+            print "    Average\t :\tâ‚¬%f" % (e_mtg_avg)
+            print "    Last\t :\tâ‚¬%f" % (e_mtg_last)        
     if btce:
         print "BTC-E"
         if usd:
@@ -237,8 +237,8 @@ while runningFlag:
             print "    Last\t : \t$%f" % (btce_last)
         if euro:
             print "Date:", e_btcetime.strftime("%Y-%m-%d %H:%M:%S")
-            print "    Average\t :\t€%f" % (e_btce_avg)
-            print "    Last\t : \t€%f" % (e_btce_last)
+            print "    Average\t :\tâ‚¬%f" % (e_btce_avg)
+            print "    Last\t : \tâ‚¬%f" % (e_btce_last)
             
     if ((bit==True) and (usd == True)):
         print "Bitstamp"
