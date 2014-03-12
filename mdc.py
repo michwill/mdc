@@ -13,14 +13,14 @@ exchange_currency = "USD"
 if len(sys.argv) > 2:
 	exchange_currency = sys.argv[2]
 
-response = urllib2.urlopen("http://middlecoin2.s3-website-us-west-2.amazonaws.com/json")
+response = urllib2.urlopen("http://middlecoin.com/json")
 data = json.loads(response.read())
 response.close()
 
-response = urllib2.urlopen("http://data.mtgox.com/api/1/BTC%s/ticker" % exchange_currency)
+response = urllib2.urlopen("http://api.bitcoincharts.com/v1/weighted_prices.json")
 ticker = json.loads(response.read())
 response.close()
-c = float(ticker["return"]["avg"]["value"])/1e3
+c = float(ticker[exchange_currency]["24h"])
 
 print "Middlecoin info"
 try:
@@ -45,10 +45,11 @@ for k in my.keys():
         my[k] = 0
 
 def write(greeting, value):
-    print "    %s:\t%.2f mBTC = %.2f %s" % (greeting, value, c*value, exchange_currency)
+    print "    %s:\t%.2f mBTC = %.2f %s" % (greeting, value, c*value/1e3, exchange_currency)
 
 if my["megahashesPerSecond"] > 0:
     print "    Rejected:\t%.1f%%" % (my["rejectedMegahashesPerSecond"] / (my["megahashesPerSecond"] + my["rejectedMegahashesPerSecond"]) * 100)
 write("Total paid", my["paidOut"])
 write("Exchanged", my["bitcoinBalance"])
 write("To be paid", my["immatureBalance"] + my["unexchangedBalance"] + my["bitcoinBalance"])
+print "1 BTC / %.2f %s" % (c, exchange_currency)
